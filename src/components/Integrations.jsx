@@ -10,9 +10,11 @@ const NODES = [
   { icon: Lock, label: 'Encrypted APIs', angle: 288 },
 ];
 
-const CX = 240; // SVG center X
-const CY = 240; // SVG center Y
-const R = 170;  // orbit radius
+// SVG canvas size and orbit radius
+const SIZE = 500;
+const CX = SIZE / 2;
+const CY = SIZE / 2;
+const R = 185;
 
 function polar(angleDeg) {
   const a = ((angleDeg - 90) * Math.PI) / 180;
@@ -41,7 +43,7 @@ export default function Integrations() {
 
       <div className="max-w-7xl mx-auto px-6">
         {/* Heading */}
-        <div className="text-center mb-24">
+        <div className="text-center mb-20">
           <motion.p {...fadeUp(0)} className="text-xs font-bold tracking-[0.35em] uppercase mb-4" style={{ color: '#C41230' }}>
             System Integration
           </motion.p>
@@ -54,137 +56,151 @@ export default function Integrations() {
             <span className="text-gradient-red">Integration</span>
           </motion.h2>
           <motion.p {...fadeUp(0.18)} className="text-base text-gray-500 max-w-xl mx-auto leading-relaxed">
-            Zero-trust encrypted pipelines connecting your entire industrial infrastructure — SAP, IoT hardware, legacy databases, and secure cloud — in a single unified mesh.
+            Zero-trust encrypted pipelines connecting your entire industrial infrastructure —
+            SAP, IoT hardware, legacy databases, and secure cloud — in a single unified mesh.
           </motion.p>
         </div>
 
-        {/* Network diagram */}
+        {/* Network diagram — purely SVG-based, no CSS absolute positioning tricks */}
         <div className="flex justify-center">
-          <div className="relative" style={{ width: R * 2 + 160, height: R * 2 + 160 }}>
-            <div style={{ position: 'absolute', top: R + 80 - R, left: R + 80 - R, width: R * 2, height: R * 2 }}>
+          <div style={{ position: 'relative', width: SIZE, height: SIZE, maxWidth: '100%' }}>
 
-              {/* SVG lines */}
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                viewBox={`0 0 ${R * 2} ${R * 2}`}
-              >
-                {NODES.map((n, i) => {
-                  const pos = polar(n.angle);
-                  return (
-                    <motion.line
-                      key={i}
-                      x1={R} y1={R}
-                      x2={R + pos.x} y2={R + pos.y}
-                      stroke="rgba(196,18,48,0.2)"
-                      strokeWidth="1.5"
-                      strokeDasharray="5 4"
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + i * 0.15 }}
-                    />
-                  );
-                })}
-                {/* orbit ring */}
-                <circle
-                  cx={R} cy={R} r={R}
-                  fill="none"
-                  stroke="rgba(196,18,48,0.08)"
-                  strokeWidth="1"
-                />
-              </svg>
+            {/* Base SVG for all lines and static rings */}
+            <svg
+              viewBox={`0 0 ${SIZE} ${SIZE}`}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible' }}
+            >
+              {/* Outer orbit ring */}
+              <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(196,18,48,0.08)" strokeWidth="1" />
+              {/* Inner glow ring */}
+              <circle cx={CX} cy={CY} r={55} fill="rgba(196,18,48,0.04)" stroke="rgba(196,18,48,0.3)" strokeWidth="1.5" />
 
-              {/* Travelling dot on each line */}
+              {/* Connector lines */}
               {NODES.map((n, i) => {
                 const pos = polar(n.angle);
                 return (
-                  <motion.div
-                    key={`dot-${i}`}
-                    className="absolute w-2 h-2 rounded-full"
-                    style={{
-                      background: '#C41230',
-                      boxShadow: '0 0 8px rgba(196,18,48,0.8)',
-                      top: R - 4,
-                      left: R - 4,
-                    }}
+                  <motion.line
+                    key={`line-${i}`}
+                    x1={CX} y1={CY}
+                    x2={pos.x} y2={pos.y}
+                    stroke="rgba(196,18,48,0.25)"
+                    strokeWidth="1.5"
+                    strokeDasharray="5 4"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 + i * 0.15, duration: 0.6 }}
+                  />
+                );
+              })}
+
+              {/* Travelling data dots — SVG native animation for correctness */}
+              {NODES.map((n, i) => {
+                const pos = polar(n.angle);
+                return (
+                  <motion.circle
+                    key={`traveller-${i}`}
+                    r="4"
+                    fill="#C41230"
+                    filter="url(#dotglow)"
                     animate={{
-                      x: [0, pos.x],
-                      y: [0, pos.y],
+                      cx: [CX, pos.x, CX],
+                      cy: [CY, pos.y, CY],
                       opacity: [0, 1, 0],
                     }}
                     transition={{
-                      duration: 2.2,
+                      duration: 2.5,
                       repeat: Infinity,
-                      delay: i * 0.4,
+                      delay: i * 0.45,
                       ease: 'easeInOut',
                     }}
                   />
                 );
               })}
 
-              {/* Central core */}
-              <div
-                className="absolute flex flex-col items-center justify-center rounded-full"
-                style={{
-                  width: 110,
-                  height: 110,
-                  top: R - 55,
-                  left: R - 55,
-                  background: 'rgba(8,8,8,0.95)',
-                  border: '2px solid rgba(196,18,48,0.5)',
-                  boxShadow: '0 0 40px rgba(196,18,48,0.25)',
-                  zIndex: 10,
-                }}
-              >
-                <Shield size={26} style={{ color: '#C41230' }} />
-                <span className="text-[9px] font-mono font-bold tracking-widest mt-1" style={{ color: '#C41230' }}>CORE</span>
-                <span className="text-[8px] font-mono" style={{ color: 'rgba(196,18,48,0.5)' }}>SECURE</span>
-                {/* Pulse ring */}
-                <motion.div
-                  className="absolute rounded-full"
-                  style={{ inset: -12, border: '1px solid rgba(196,18,48,0.25)' }}
-                  animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
-                  transition={{ duration: 2.5, repeat: Infinity }}
-                />
-              </div>
+              <defs>
+                <filter id="dotglow" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+            </svg>
 
-              {/* Satellite nodes */}
-              {NODES.map((n, i) => {
-                const pos = polar(n.angle);
-                const Icon = n.icon;
-                return (
-                  <motion.div
-                    key={i}
-                    className="absolute flex flex-col items-center group cursor-pointer"
+            {/* Central Core — positioned exactly at center */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="absolute rounded-full flex flex-col items-center justify-center"
+              style={{
+                width: 110,
+                height: 110,
+                top: CY - 55,
+                left: CX - 55,
+                background: '#080808',
+                border: '2px solid rgba(196,18,48,0.55)',
+                boxShadow: '0 0 40px rgba(196,18,48,0.3)',
+                zIndex: 20,
+              }}
+            >
+              <Shield size={26} style={{ color: '#C41230' }} />
+              <span className="text-[9px] font-mono font-bold tracking-widest mt-1" style={{ color: '#C41230' }}>CORE</span>
+              <span className="text-[8px] font-mono" style={{ color: 'rgba(196,18,48,0.5)' }}>SECURE</span>
+              {/* Pulse ring */}
+              <motion.div
+                className="absolute rounded-full"
+                style={{ inset: -14, border: '1px solid rgba(196,18,48,0.2)' }}
+                animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              />
+            </motion.div>
+
+            {/* Satellite nodes — each placed at polar() coordinates */}
+            {NODES.map((n, i) => {
+              const pos = polar(n.angle);
+              const Icon = n.icon;
+              const nodeW = 80;
+              const nodeH = 74;
+              return (
+                <motion.div
+                  key={`node-${i}`}
+                  className="absolute flex flex-col items-center cursor-pointer group"
+                  style={{
+                    width: nodeW,
+                    // Centre the node box on the orbit point
+                    left: pos.x - nodeW / 2,
+                    top: pos.y - nodeH / 2,
+                    zIndex: 10,
+                  }}
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 + i * 0.12, duration: 0.5 }}
+                  whileHover={{ scale: 1.15 }}
+                >
+                  <div
+                    className="w-14 h-14 flex items-center justify-center rounded transition-all duration-300 group-hover:border-opacity-60"
                     style={{
-                      top: R + pos.y - 38,
-                      left: R + pos.x - 44,
-                      width: 88,
-                      zIndex: 10,
+                      background: 'rgba(196,18,48,0.06)',
+                      border: '1px solid rgba(196,18,48,0.25)',
                     }}
-                    initial={{ opacity: 0, scale: 0.6 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 + i * 0.12, duration: 0.5 }}
-                    whileHover={{ scale: 1.1 }}
                   >
-                    <div
-                      className="w-14 h-14 flex items-center justify-center rounded transition-all duration-300"
-                      style={{
-                        background: 'rgba(196,18,48,0.06)',
-                        border: '1px solid rgba(196,18,48,0.2)',
-                      }}
-                    >
-                      <Icon size={20} style={{ color: '#C41230' }} />
-                    </div>
-                    <span className="text-[9px] font-mono font-bold tracking-wider text-gray-500 mt-2 text-center whitespace-nowrap">
-                      {n.label}
-                    </span>
-                    <span className="w-1.5 h-1.5 rounded-full mt-1 animate-pulse" style={{ background: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
-                  </motion.div>
-                );
-              })}
-            </div>
+                    <Icon size={20} style={{ color: '#C41230' }} />
+                  </div>
+                  <span className="text-[9px] font-mono font-bold tracking-wider text-gray-500 mt-1.5 text-center whitespace-nowrap leading-tight">
+                    {n.label}
+                  </span>
+                  <span
+                    className="w-1.5 h-1.5 rounded-full mt-1 animate-pulse"
+                    style={{ background: '#22c55e', boxShadow: '0 0 6px #22c55e' }}
+                  />
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
