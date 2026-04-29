@@ -45,7 +45,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden section-grid"
+      className="relative min-h-[80vh] sm:min-h-[85vh] flex items-center justify-center overflow-hidden section-grid"
       style={{ background: 'linear-gradient(180deg, #0d0d0d 0%, #080808 100%)' }}
     >
       {/* ── Scanning laser line ──────────────────────── */}
@@ -103,7 +103,7 @@ export default function Hero() {
       />
 
       {/* ── Main content ────────────────────────────── */}
-      <div className="relative z-20 text-center px-6 max-w-5xl mx-auto flex flex-col items-center">
+      <div className="relative z-20 text-center px-4 sm:px-6 max-w-4xl mx-auto flex flex-col items-center">
 
         {/* Live badge */}
         <motion.div
@@ -126,7 +126,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] tracking-tight text-white mb-6"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase leading-[0.95] tracking-tight text-white mb-6"
           style={{ fontFamily: "'Rajdhani', sans-serif" }}
         >
           Systems-as-a-Service<br />
