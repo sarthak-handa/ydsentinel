@@ -28,6 +28,37 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] },
 });
 
+/* ── Travelling data dot ─────────────────────────────── */
+function TravellingDot({ node, index }) {
+  const pos = polar(node.angle);
+  const dx = pos.x - CX;
+  const dy = pos.y - CY;
+
+  return (
+    <motion.circle
+      cx={CX}
+      cy={CY}
+      r="4"
+      fill="#C41230"
+      filter="url(#dotglow)"
+      style={{
+        transformOrigin: `${CX}px ${CY}px`,
+      }}
+      animate={{
+        translateX: [0, dx, 0],
+        translateY: [0, dy, 0],
+        opacity: [0, 1, 0],
+      }}
+      transition={{
+        duration: 2.5,
+        repeat: Infinity,
+        delay: index * 0.45,
+        ease: 'easeInOut',
+      }}
+    />
+  );
+}
+
 export default function Integrations() {
   return (
     <section
@@ -61,7 +92,7 @@ export default function Integrations() {
           </motion.p>
         </div>
 
-        {/* Network diagram — purely SVG-based, no CSS absolute positioning tricks */}
+        {/* Network diagram */}
         <div className="flex justify-center">
           <div style={{ position: 'relative', width: SIZE, height: SIZE, maxWidth: '100%' }}>
 
@@ -94,29 +125,10 @@ export default function Integrations() {
                 );
               })}
 
-              {/* Travelling data dots — SVG native animation for correctness */}
-              {NODES.map((n, i) => {
-                const pos = polar(n.angle);
-                return (
-                  <motion.circle
-                    key={`traveller-${i}`}
-                    r="4"
-                    fill="#C41230"
-                    filter="url(#dotglow)"
-                    animate={{
-                      cx: [CX, pos.x, CX],
-                      cy: [CY, pos.y, CY],
-                      opacity: [0, 1, 0],
-                    }}
-                    transition={{
-                      duration: 2.5,
-                      repeat: Infinity,
-                      delay: i * 0.45,
-                      ease: 'easeInOut',
-                    }}
-                  />
-                );
-              })}
+              {/* Travelling data dots */}
+              {NODES.map((n, i) => (
+                <TravellingDot key={`traveller-${i}`} node={n} index={i} />
+              ))}
 
               <defs>
                 <filter id="dotglow" x="-100%" y="-100%" width="300%" height="300%">

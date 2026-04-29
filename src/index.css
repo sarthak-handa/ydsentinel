@@ -1,13 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Custom scrollbar */
+/* ── Tailwind v4 theme config ─────────────────────────── */
+@theme {
+  --color-yd-red: #C41230;
+  --color-yd-gray: #3D4A52;
+  --color-yd-dark: #080808;
+
+  --font-sans: 'Inter', 'Helvetica Neue', sans-serif;
+  --font-rajdhani: 'Rajdhani', sans-serif;
+  --font-orbitron: 'Orbitron', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ── Custom scrollbar ─────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb { background: #C41230; border-radius: 2px; }
 
-/* Cursor glow */
+/* ── Cursor glow ──────────────────────────────────────── */
 .cursor-glow {
   position: fixed;
   width: 400px;
@@ -20,39 +30,45 @@
   transition: opacity 0.3s ease;
 }
 
-@layer utilities {
-  .glass {
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.07);
-  }
-  .glass-red {
-    background: rgba(196,18,48,0.05);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(196,18,48,0.15);
-  }
-  .text-gradient-red {
-    background: linear-gradient(135deg, #ff2244 0%, #C41230 50%, #8b0018 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .glow-red {
-    box-shadow: 0 0 30px rgba(196,18,48,0.4), 0 0 60px rgba(196,18,48,0.15);
-  }
-  .glow-red-sm {
-    box-shadow: 0 0 15px rgba(196,18,48,0.5);
-  }
-  .border-glow {
-    border-color: rgba(196,18,48,0.5);
-    box-shadow: 0 0 15px rgba(196,18,48,0.2), inset 0 0 15px rgba(196,18,48,0.05);
-  }
-  .noise {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  }
+/* ── Custom utility classes ───────────────────────────── */
+@utility glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.07);
 }
 
+@utility glass-red {
+  background: rgba(196,18,48,0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(196,18,48,0.15);
+}
+
+@utility text-gradient-red {
+  background: linear-gradient(135deg, #ff2244 0%, #C41230 50%, #8b0018 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@utility glow-red {
+  box-shadow: 0 0 30px rgba(196,18,48,0.4), 0 0 60px rgba(196,18,48,0.15);
+}
+
+@utility glow-red-sm {
+  box-shadow: 0 0 15px rgba(196,18,48,0.5);
+}
+
+@utility border-glow {
+  border-color: rgba(196,18,48,0.5);
+  box-shadow: 0 0 15px rgba(196,18,48,0.2), inset 0 0 15px rgba(196,18,48,0.05);
+}
+
+@utility noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ── Keyframe animations ──────────────────────────────── */
 @keyframes scan {
   0% { transform: translateY(-100vh); }
   100% { transform: translateY(100vh); }
@@ -94,15 +110,41 @@
   50% { opacity: 0; }
 }
 
-.animate-scan { animation: scan 8s linear infinite; }
-.animate-scan-fast { animation: scan 4s linear infinite; }
-.animate-radar { animation: radar-sweep 6s linear infinite; }
-.animate-float { animation: float 6s ease-in-out infinite; }
-.animate-float-delayed { animation: float-delayed 8s ease-in-out infinite 2s; }
-.animate-pulse-ring { animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
-.animate-blink { animation: blink 1s step-end infinite; }
-.animate-data-flow { animation: data-flow 3s linear infinite; }
+/* ── Animation utilities ──────────────────────────────── */
+@utility animate-scan {
+  animation: scan 8s linear infinite;
+}
+@utility animate-scan-fast {
+  animation: scan 4s linear infinite;
+}
+@utility animate-radar {
+  animation: radar-sweep 6s linear infinite;
+}
+@utility animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+@utility animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite 2s;
+}
+@utility animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+@utility animate-blink {
+  animation: blink 1s step-end infinite;
+}
+@utility animate-data-flow {
+  animation: data-flow 3s linear infinite;
+}
 
+/* ── Section grid pattern ─────────────────────────────── */
+@utility section-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── Base body styles ─────────────────────────────────── */
 body {
   margin: 0;
   padding: 0;
@@ -128,12 +170,3 @@ body::after {
   pointer-events: none;
   z-index: 9998;
 }
-
-/* Section separator */
-.section-grid {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
