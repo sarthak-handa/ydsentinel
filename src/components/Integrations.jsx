@@ -10,11 +10,13 @@ const NODES = [
   { icon: Lock, label: 'Encrypted APIs', angle: 288 },
 ];
 
-const R = 170; // orbit radius (px)
+const CX = 240; // SVG center X
+const CY = 240; // SVG center Y
+const R = 170;  // orbit radius
 
 function polar(angleDeg) {
   const a = ((angleDeg - 90) * Math.PI) / 180;
-  return { x: Math.cos(a) * R, y: Math.sin(a) * R };
+  return { x: CX + Math.cos(a) * R, y: CY + Math.sin(a) * R };
 }
 
 const fadeUp = (delay = 0) => ({
