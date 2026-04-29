@@ -4,13 +4,21 @@
 
 @layer utilities {
   .glass-effect {
-    @apply bg-black/40 backdrop-blur-md border border-gray-700/50 shadow-2xl;
+    @apply bg-black/40 backdrop-blur-xl border border-gray-800/60 shadow-2xl;
+  }
+  .glass-panel {
+    @apply bg-zinc-950/50 backdrop-blur-md border border-white/5;
+  }
+  .text-glow {
+    text-shadow: 0 0 10px rgba(198, 17, 40, 0.6);
   }
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: black;
+  background-color: #050505;
+  background-image: radial-gradient(circle at 50% 0%, #111 0%, #050505 50%, #000 100%);
   color: #e5e7eb;
+  font-family: 'Inter', sans-serif;
 }
