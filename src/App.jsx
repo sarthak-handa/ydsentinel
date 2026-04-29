@@ -1,48 +1,44 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navbar from './components/Layout/Navbar';
 import Hero from './components/Hero';
 import PlatformHub from './components/PlatformHub';
-import ProductFeature from './components/ProductModules';
+import ProductModules from './components/ProductModules';
+import WhyYD from './components/WhyYD';
 import Integrations from './components/Integrations';
+import Footer from './components/Footer';
 
 function App() {
+  const cursorRef = useRef(null);
+
+  useEffect(() => {
+    const move = (e) => {
+      if (cursorRef.current) {
+        cursorRef.current.style.left = e.clientX + 'px';
+        cursorRef.current.style.top = e.clientY + 'px';
+      }
+    };
+    window.addEventListener('mousemove', move);
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+
   return (
-    <div className="bg-black min-h-screen text-gray-200 font-sans selection:bg-red-600 selection:text-white">
+    <div
+      className="min-h-screen text-gray-200 selection:bg-red-700 selection:text-white"
+      style={{ background: '#080808' }}
+    >
+      {/* Cursor glow */}
+      <div ref={cursorRef} className="cursor-glow hidden md:block" />
+
       <Navbar />
       <Hero />
       <PlatformHub />
-      
-      <ProductFeature 
-        subtitle="YD Detect"
-        title="AI Visual Anomaly Recognition"
-        items={[
-          "Real-time Helmet & PPE Detection",
-          "Automated Scrap & Anomaly Identification",
-          "License Plate Recognition (LPR)",
-          "Dynamic Coil & Asset Tracking"
-        ]}
-        align="left"
-      />
-
-      <ProductFeature 
-        subtitle="YD Plan"
-        title="Enterprise Execution Workflow"
-        items={[
-          "Task to Component-Level Breakdown",
-          "Automated Bill of Materials (BOM) Processing",
-          "Fabrication & Drawing Lifecycle Management",
-          "Commissioning Verification Nodes"
-        ]}
-        align="right"
-      />
-
+      <ProductModules />
+      <WhyYD />
       <Integrations />
-
-      <footer className="bg-black py-12 border-t border-gray-900 text-center text-gray-600 text-sm tracking-widest uppercase">
-        <p>© {new Date().getFullYear()} YD Sentinel. Detect. Plan. Monitor. Protect.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
 
 export default App;
+
