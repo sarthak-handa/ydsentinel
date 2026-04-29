@@ -44,7 +44,7 @@ export default function Navbar() {
               className="h-8 w-auto object-contain transition-all duration-300 group-hover:opacity-90"
             />
             <span className="hidden sm:inline text-sm font-semibold tracking-[0.25em] uppercase text-gray-200">
-              Sentinel
+              YD Sentinel
             </span>
           </a>
 
